@@ -8,7 +8,7 @@
 #define OOP_L5_TESTCONTROLLER_H
 
 #include "../Domain/Scooter.h"
-#include "InMemoryRepo/ScooterRepo.h"
+#include "InMemoryRepo/InMemoryRepo.h"
 #include "../Controller/ScooterController.h"
 #include "../Utils/utils.h"
 #include "../Exception/ScooterException.h"
@@ -21,7 +21,7 @@ using namespace ctrl;
 using namespace Exception;
 
 void testController() {
-    ScooterController controller(make_unique<ScooterRepo>());
+    ScooterController controller(make_unique<InMemoryRepo>());
 
     Scooter scooter1("aaa", "Bolt 4", strToTime("16-05-2023"), 10.0, "Str. Blaga", Status::PARKED);
     Scooter scooter2("bbb", "Bolt 4", strToTime("20-03-2022"), 15.0, "Str. Eminescu", Status::IN_USE);

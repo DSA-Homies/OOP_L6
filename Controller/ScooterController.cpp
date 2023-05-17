@@ -9,7 +9,7 @@ using domain::Scooter;
 
 using Exception::ScooterException;
 
-ScooterController::ScooterController(unique_ptr<repo::ScooterRepo> ptr) {
+ScooterController::ScooterController(unique_ptr<repo::InMemoryRepo> ptr) {
     repo = std::move(ptr);
 }
 

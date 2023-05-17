@@ -1,6 +1,6 @@
 #include <iostream>
 #include "UI/ScooterUI.h"
-#include "InMemoryRepo/ScooterRepo.h"
+#include "InMemoryRepo/InMemoryRepo.h"
 #include "Controller/ScooterController.h"
 
 #include "Test/TestAll.h"
@@ -26,7 +26,7 @@ int main() {
             Scooter("jjj", "Bolt 3", strToTime("28-11-2020"), 44.8, "Str. Eliade", Status::DECOMMISSIONED),
     };
 
-    unique_ptr<ScooterRepo> repoPtr = make_unique<ScooterRepo>(initList);
+    unique_ptr<InMemoryRepo> repoPtr = make_unique<InMemoryRepo>(initList);
     unique_ptr<ScooterController> controllerPtr = make_unique<ScooterController>(std::move(repoPtr));
 
     ScooterUI ui(std::move(controllerPtr));

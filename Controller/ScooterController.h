@@ -2,14 +2,14 @@
 #define OOP_L5_SCOOTERCONTROLLER_H
 
 #include <memory>
-#include "InMemoryRepo/ScooterRepo.h"
+#include "InMemoryRepo/InMemoryRepo.h"
 
 namespace ctrl {
     class ScooterController {
     private:
-        unique_ptr<repo::ScooterRepo> repo;
+        unique_ptr<repo::InMemoryRepo> repo;
     public:
-        explicit ScooterController(unique_ptr<repo::ScooterRepo> ptr);
+        explicit ScooterController(unique_ptr<repo::InMemoryRepo> ptr);
 
         [[nodiscard]] vector<Scooter> searchByLocation(const string &location) const;
 

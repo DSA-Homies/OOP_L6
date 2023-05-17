@@ -1,17 +1,17 @@
 #include <stdexcept>
 #include <algorithm>
-#include "ScooterRepo.h"
+#include "InMemoryRepo.h"
 
 using namespace repo;
 
-ScooterRepo::ScooterRepo(vector<Scooter> initList) {
+InMemoryRepo::InMemoryRepo(vector<Scooter> initList) {
     scooterList = std::move(initList);
 }
 
 /**
  * @return A vector containing all the scooters in the repo
  */
-vector<Scooter> ScooterRepo::getAll() {
+vector<Scooter> InMemoryRepo::getAll() {
     return scooterList;
 }
 
@@ -19,7 +19,7 @@ vector<Scooter> ScooterRepo::getAll() {
  * Adds a scooter to the repo
  * @param scooter The scooter to be added
  */
-void ScooterRepo::add(const Scooter &scooter) {
+void InMemoryRepo::add(const Scooter &scooter) {
     scooterList.push_back(scooter);
 }
 
@@ -28,7 +28,7 @@ void ScooterRepo::add(const Scooter &scooter) {
  * @param scooter The scooter to be removed
  * @return True if the scooter was removed, false otherwise
  */
-bool ScooterRepo::remove(const Scooter &scooter) {
+bool InMemoryRepo::remove(const Scooter &scooter) {
     auto it = find(scooterList.begin(), scooterList.end(), scooter);
     if (it != scooterList.end()) {
         scooterList.erase(it);
@@ -43,9 +43,9 @@ bool ScooterRepo::remove(const Scooter &scooter) {
  * @param index The index of the scooter to be removed
  * @throws out_of_range if index is invalid
  */
-void ScooterRepo::remove(int index) {
+void InMemoryRepo::remove(int index) {
     if (index < 0 || index > scooterList.size())
-        throw out_of_range("ScooterRepo::remove(): Index out of range for index " + to_string(index));
+        throw out_of_range("InMemoryRepo::remove(): Index out of range for index " + to_string(index));
 
     scooterList.erase(scooterList.begin() + index);
 }
@@ -56,9 +56,9 @@ void ScooterRepo::remove(int index) {
  * @param newScooter The new scooter object to replace the old one
  * @throws out_of_range if index is invalid
  */
-void ScooterRepo::update(int index, const Scooter &newScooter) {
+void InMemoryRepo::update(int index, const Scooter &newScooter) {
     if (index < 0 || index > scooterList.size())
-        throw out_of_range("ScooterRepo::update(): Index out of range for index " + to_string(index));
+        throw out_of_range("InMemoryRepo::update(): Index out of range for index " + to_string(index));
 
     scooterList[index] = newScooter;
 }
@@ -68,9 +68,9 @@ void ScooterRepo::update(int index, const Scooter &newScooter) {
  * @param index
  * @param status
  */
-void ScooterRepo::updateStatus(int index, Status status) {
+void InMemoryRepo::updateStatus(int index, Status status) {
     if (index < 0 || index > scooterList.size())
-        throw out_of_range("ScooterRepo::updateStatus(): Index out of range for index " + to_string(index));
+        throw out_of_range("InMemoryRepo::updateStatus(): Index out of range for index " + to_string(index));
 
     scooterList[index].setStatus(status);
 }
@@ -79,7 +79,7 @@ void ScooterRepo::updateStatus(int index, Status status) {
  * @return The index of the scooter if found, -1 otherwise
  * @param scooter The scooter to be searched for
  */
-int ScooterRepo::getIndexOf(const Scooter &scooter) {
+int InMemoryRepo::getIndexOf(const Scooter &scooter) {
     auto it = std::find(scooterList.begin(), scooterList.end(), scooter);
     if (it != scooterList.end())
         return int(distance(scooterList.begin(), it));
@@ -92,9 +92,9 @@ int ScooterRepo::getIndexOf(const Scooter &scooter) {
  * @param index The index of the scooter to be returned
  * @throws out_of_range if index is invalid
  */
-Scooter ScooterRepo::getScooterAtIndex(int index) {
+Scooter InMemoryRepo::getScooterAtIndex(int index) {
     if (index < 0 || index > scooterList.size())
-        throw out_of_range("ScooterRepo::getScooterAtIndex(): Index out of range for index " + to_string(index));
+        throw out_of_range("InMemoryRepo::getScooterAtIndex(): Index out of range for index " + to_string(index));
 
     return scooterList[index];
 }
@@ -103,7 +103,7 @@ Scooter ScooterRepo::getScooterAtIndex(int index) {
  * @brief getter for the current scooter that is being used by the user at the moment
  * @return the scooter object that is being used by the user
  */
-Scooter ScooterRepo::getMyScooter() const {
+Scooter InMemoryRepo::getMyScooter() const {
     return myScooter;
 }
 
@@ -111,7 +111,7 @@ Scooter ScooterRepo::getMyScooter() const {
  * @brief setter for the current scooter that is being used by the user at the moment
  * @param _myScooter the current scooter that we want to set
  */
-void ScooterRepo::setMyScooter(const Scooter &_myScooter) {
+void InMemoryRepo::setMyScooter(const Scooter &_myScooter) {
     myScooter = _myScooter;
 }
 
