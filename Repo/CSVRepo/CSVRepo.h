@@ -6,6 +6,7 @@
 #define OOP_L6_CSVREPO_H
 
 #include "../CRUDRepo/CRUDRepo.h"
+#include "../Utils/Utils.h"
 
 class CSVRepo : public CRUDRepo<Scooter>{
 private:

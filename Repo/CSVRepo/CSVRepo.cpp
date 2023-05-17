@@ -12,7 +12,7 @@ CSVRepo::CSVRepo(const string &filename) : filename_(filename){
 
 void CSVRepo::add(const Scooter &scooter) {
 
-    vector <Scooter> scooterList = loadFromFile();
+    vector <Scooter> scooterList;
     scooterList.push_back(scooter);
     saveToFile(scooterList);
 }
@@ -79,8 +79,8 @@ void CSVRepo::saveToFile(const vector<Scooter> &scooterList) {
     ofstream file(filename_);
     if(file.is_open()) {
         for(const auto& scooter : scooterList) {
-            file << scooter.getId() << "," << scooter.getModel() << "," << scooter.getCommissioningDate() << ","
-            << scooter.getKilometer() << "," << scooter.getLocation() << "," << scooter.getStatus();
+            file << scooter.getId() << "," << scooter.getModel() << "," << timeToStr(scooter.getCommissioningDate()) << ","
+            << scooter.getKilometer() << "," << scooter.getLocation() << "," << scooter.getStatus() << "\n";
         }
         file.close();
     } else {
@@ -101,7 +101,7 @@ vector<Scooter> CSVRepo::loadFromFile() {
             if (std::getline(iss, id, ',') && std::getline(iss, model, ',') &&
             std::getline(iss, commissioningDate) && std::getline(iss, kilometer) &&
             std::getline(iss, location) && std::getline(iss, status)) {
-                scooterList.emplace_back(id, model, Status(std::stoi(status)));
+                scooterList.emplace_back(id, model, strToTime(commissioningDate, kilometer, location, Status(std::stoi(status)));
             }
         }
         file.close();
