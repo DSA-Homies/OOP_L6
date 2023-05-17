@@ -2,7 +2,7 @@
 #define OOP_L5_SCOOTERREPO_H
 
 #include <vector>
-#include "../Domain/Scooter.h"
+#include "Scooter.h"
 
 using namespace std;
 using namespace domain;

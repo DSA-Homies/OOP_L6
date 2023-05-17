@@ -2,7 +2,7 @@
 #define OOP_L5_SCOOTERCONTROLLER_H
 
 #include <memory>
-#include "../Repo/ScooterRepo.h"
+#include "InMemoryRepo/ScooterRepo.h"
 
 namespace ctrl {
     class ScooterController {

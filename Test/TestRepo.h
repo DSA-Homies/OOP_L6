@@ -6,7 +6,7 @@
 #define OOP_L5_TESTREPO_H
 
 #include "../Domain/Scooter.h"
-#include "../Repo/ScooterRepo.h"
+#include "InMemoryRepo/ScooterRepo.h"
 #include "../Utils/utils.h"
 
 #include <cassert>

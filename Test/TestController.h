@@ -8,7 +8,7 @@
 #define OOP_L5_TESTCONTROLLER_H
 
 #include "../Domain/Scooter.h"
-#include "../Repo/ScooterRepo.h"
+#include "InMemoryRepo/ScooterRepo.h"
 #include "../Controller/ScooterController.h"
 #include "../Utils/utils.h"
 #include "../Exception/ScooterException.h"
