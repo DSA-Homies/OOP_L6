@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 #include "ScooterRepo.h"
 
 using namespace repo;

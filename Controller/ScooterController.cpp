@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ScooterController.h"
 #include "../Utils/utils.h"
 #include "../Exception/ScooterException.h"
