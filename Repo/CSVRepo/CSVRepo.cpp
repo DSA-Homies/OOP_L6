@@ -98,7 +98,9 @@ vector<Scooter> CSVRepo::loadFromFile() {
         while(getline(file, line)) {
             stringstream iss(line);
             string id, model, commissioningDate, kilometer, location, status;
-            if (std::getline(iss, id, ',') && std::getline(iss, model, ',') && std::getline(iss, status)) {
+            if (std::getline(iss, id, ',') && std::getline(iss, model, ',') &&
+            std::getline(iss, commissioningDate) && std::getline(iss, kilometer) &&
+            std::getline(iss, location) && std::getline(iss, status)) {
                 scooterList.emplace_back(id, model, Status(std::stoi(status)));
             }
         }
