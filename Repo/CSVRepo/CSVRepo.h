@@ -9,9 +9,9 @@
 
 class CSVRepo : public CRUDRepo<Scooter>{
 private:
-    string filename;
-    void loadFromFile();
-    void writeToFile();
+    string filename_;
+    void saveToFile(const vector<Scooter>& scooterList);
+    vector<Scooter> loadFromFile();
 
 public:
     explicit CSVRepo(const string& filename);

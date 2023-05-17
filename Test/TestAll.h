@@ -2,7 +2,7 @@
 #define OOP_L5_TESTALL_H
 
 #include "../Test/TestDomain.h"
-#include "../Test/TestRepo.h"
+#include "../Test/TestInMemoryRepo.h"
 #include "TestController.h"
 
 /**
