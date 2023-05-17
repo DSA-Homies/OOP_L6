@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include "CSVRepo.h"
+#include <algorithm>
 
 CSVRepo::CSVRepo(const string &filename) : filename_(filename){
 
@@ -76,7 +77,7 @@ vector<Scooter> CSVRepo::getAll() {
 }
 
 void CSVRepo::saveToFile(const vector<Scooter> &scooterList) {
-    ofstream file(filename_);
+    ofstream file(filename_, ios::app);
     if(file.is_open()) {
         for(const auto& scooter : scooterList) {
             file << scooter.getId() << "," << scooter.getModel() << "," << timeToStr(scooter.getCommissioningDate()) << ","
@@ -101,7 +102,7 @@ vector<Scooter> CSVRepo::loadFromFile() {
             if (std::getline(iss, id, ',') && std::getline(iss, model, ',') &&
             std::getline(iss, commissioningDate) && std::getline(iss, kilometer) &&
             std::getline(iss, location) && std::getline(iss, status)) {
-                scooterList.emplace_back(id, model, strToTime(commissioningDate, kilometer, location, Status(std::stoi(status)));
+                scooterList.emplace_back(id, model, strToTime(commissioningDate), std::stof(kilometer), location, Status(std::stoi(status)));
             }
         }
         file.close();
