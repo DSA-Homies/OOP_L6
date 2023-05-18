@@ -1,6 +1,6 @@
 #include <iostream>
 #include "UI/ScooterUI.h"
-#include "../InMemoryRepo/InMemoryRepo.h"
+#include "../Repo/InMemoryRepo/InMemoryRepo.h"
 #include "Controller/ScooterController.h"
 
 #include "Test/TestAll.h"

@@ -28,6 +28,11 @@ void testCSVRepo() {
     repo.add(scooter4);
 
 //    assert(repo.getIndexOf(scooter1) == 0);
+    assert(repo.getAll().front() == scooter1);
+    assert(repo.getAll().back() == scooter4);
+    assert(repo.getAll().size() == 4);
+
+//    repo.remove(scooter3);
 
     cout << "CSV Repo tested successfully!" << endl;
 }
