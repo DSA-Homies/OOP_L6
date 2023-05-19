@@ -30,8 +30,12 @@ void testCSVRepo() {
 //    assert(repo.getIndexOf(scooter1) == 0);
 //    assert(repo.getAll().front() == scooter1);
 //    assert(repo.getAll().back() == scooter4);
+<<<<<<< Updated upstream
 //    repo.getAll().front() == scooter1;
     assert(repo.getAll().size() == 4);
+=======
+//    assert(repo.getAll().size() == 4);
+>>>>>>> Stashed changes
 
     repo.remove(scooter3);
     repo.remove(scooter2);
