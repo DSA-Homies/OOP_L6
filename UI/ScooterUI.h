@@ -4,6 +4,12 @@
 #include "ManagerUI.h"
 #include "CustomerUI.h"
 #include "../Controller/ScooterController.h"
+#include "../Repo/InMemoryRepo/InMemoryRepo.h"
+#include "../Repo/CSVRepo//CSVRepo.h"
+#include "../Domain/Scooter.h"
+
+using namespace domain;
+using namespace repo;
 
 namespace ui {
 
@@ -11,12 +17,34 @@ namespace ui {
         friend class Widgets;
 
     private:
+        shared_ptr<ctrl::ScooterController> ctrl;
         CustomerUI customerUI;
         ManagerUI managerUI;
 
     public:
         explicit ScooterUI(const std::shared_ptr<ctrl::ScooterController> &_controller)
-                : customerUI(_controller), managerUI(_controller) {}
+                : ctrl(_controller), customerUI(_controller), managerUI(_controller) {}
+
+        void chooseRepo() {
+            vector<string> options = {"In Memory Repo", "CSV Repo", "Exit"};
+
+            int option = Widgets::menu("Choose Repository", options);
+
+            switch (option) {
+                case 1:
+//                    ctrl->setRepo(make_unique<InMemoryRepo<Scooter>>());
+                    break;
+                case 2:
+//                    ctrl->setRepo(make_unique<CSVRepo<Scooter>>(vector<Scooter> scooters));
+                    break;
+                case 3:
+                    exit(0);
+                default:
+                    chooseRepo();
+            }
+
+            mainMenu();
+        }
 
         void mainMenu() const {
             Widgets::printTitle("Bolt Scooters");

@@ -14,21 +14,20 @@ namespace repo {
 
     class InMemoryRepo : public CRUDRepo<Scooter>{
     private:
-        vector<Scooter> scooterList;
         Scooter myScooter{};
 
     public:
+        explicit InMemoryRepo(vector<Scooter> initList = {});
+
         [[nodiscard]] Scooter getMyScooter() const;
 
-        void setMyScooter(const Scooter &_myScooter);
-
-        explicit InMemoryRepo(vector<Scooter> initList = {});
+        void setMyScooter(const Scooter &_myScooter) override;
 
         void add(const Scooter& scooter) override;
 
         bool remove(const Scooter &scooter) override;
 
-        void remove(int index);
+        void removeAtIndex(int index) override;
 
         void update(int index, const Scooter &newScooter) override;
 

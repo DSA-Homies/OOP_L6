@@ -9,8 +9,10 @@ using domain::Scooter;
 
 using Exception::ScooterException;
 
-ScooterController::ScooterController(unique_ptr<repo::InMemoryRepo> ptr) {
-    repo = std::move(ptr);
+ScooterController::ScooterController() = default;
+
+void ScooterController::setRepo(unique_ptr<CRUDRepo<Scooter>> _repoPtr) {
+    repo = std::move(_repoPtr);
 }
 
 /**
@@ -97,7 +99,7 @@ void ScooterController::add(const string &id, const string &model, time_t commis
 }
 
 /**
- * @brief Removes a scooter from the repo. It searched the index of the scooter and if it is found then we remove
+ * @brief Removes a scooter from the repo. It searched the index of the scooter and if it is found then we removeAtIndex
  * the scooter from the repo
  * @param id we search for the desired scooter by its id
  * @throw ScooterException if the scooter was not found in the repo
@@ -110,7 +112,7 @@ void ScooterController::deleteScooter(const string &id) {
     int index = repo->getIndexOf(tempScooter);
 
     if (index != -1) {
-        repo->remove(index);
+        repo->removeAtIndex(index);
         found = true;
     }
 
@@ -213,5 +215,6 @@ Scooter ScooterController::getScooterById(const string &id) {
 
     throw ScooterException("Scooter not found!");
 
-    return Scooter();
 }
+
+

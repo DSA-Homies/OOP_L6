@@ -3,13 +3,17 @@
 
 #include <memory>
 #include "../Repo/InMemoryRepo/InMemoryRepo.h"
+#include "../Repo/CRUDRepo/CRUDRepo.h"
+
 
 namespace ctrl {
     class ScooterController {
     private:
-        unique_ptr<repo::InMemoryRepo> repo;
+        unique_ptr<CRUDRepo<Scooter>> repo;
     public:
-        explicit ScooterController(unique_ptr<repo::InMemoryRepo> ptr);
+        explicit ScooterController();
+
+        void setRepo(unique_ptr<CRUDRepo<Scooter>> _repoPtr);
 
         [[nodiscard]] vector<Scooter> searchByLocation(const string &location) const;
 

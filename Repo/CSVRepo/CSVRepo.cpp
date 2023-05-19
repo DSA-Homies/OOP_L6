@@ -6,82 +6,78 @@
 #include <sstream>
 #include "CSVRepo.h"
 #include <algorithm>
+#include <utility>
 
-CSVRepo::CSVRepo(const string &filename) : filename_(filename){
+using namespace repo;
+
+CSVRepo::CSVRepo(string filename) : filename_(std::move(filename)) {
 
 }
 
 void CSVRepo::add(const Scooter &scooter) {
-
-    vector <Scooter> scooterList;
-    scooterList.push_back(scooter);
-    saveToFile(scooterList);
+    list.push_back(scooter);
+    saveToFile(list);
 }
 
 bool CSVRepo::remove(const Scooter &scooter) {
-
-    vector <Scooter> scooterList = loadFromFile();
-    auto it = std::find(scooterList.begin(), scooterList.end(), scooter);
-    if(it != scooterList.end()) {
-        scooterList.erase(it);
-        saveToFile(scooterList);
+    loadFromFile();
+    auto it = find(list.begin(), list.end(), scooter);
+    if (it != list.end()) {
+        list.erase(it);
+        saveToFile(list);
         return true;
     }
     return false;
 }
 
 void CSVRepo::update(int index, const Scooter &newScooter) {
-
-    vector <Scooter> scooterList = loadFromFile();
-    if(index < 0 || index > scooterList.size()) {
+    loadFromFile();
+    if (index < 0 || index > list.size()) {
         throw out_of_range("CSVRepo::update(): Index out of range for index " + to_string(index));
     }
 
-    scooterList[index] = newScooter;
-    saveToFile(scooterList);
+    list[index] = newScooter;
+    saveToFile(list);
 }
 
 void CSVRepo::updateStatus(int index, Status status) {
+    loadFromFile();
+    if (index < 0 || index > list.size()) {
+        throw out_of_range("CSVRepo::updateStatus(): Index out of range for index " + to_string(index));
+    }
 
-        vector <Scooter> scooterList = loadFromFile();
-        if(index < 0 || index > scooterList.size()) {
-            throw out_of_range("CSVRepo::updateStatus(): Index out of range for index " + to_string(index));
-        }
-
-        scooterList[index].setStatus(status);
-        saveToFile(scooterList);
+    list[index].setStatus(status);
+    saveToFile(list);
 }
 
 int CSVRepo::getIndexOf(const Scooter &scooter) {
-
-    vector <Scooter> scooterList = loadFromFile();
-    auto it = std::find(scooterList.begin(), scooterList.end(), scooter);
-    if(it != scooterList.end()) {
-        return std::distance(scooterList.begin(), it);
+    loadFromFile();
+    auto it = std::find(list.begin(), list.end(), scooter);
+    if (it != list.end()) {
+        return (int) std::distance(list.begin(), it);
     }
     return -1;
 }
 
 Scooter CSVRepo::getScooterAtIndex(int index) {
-
-    vector <Scooter> scooterList = loadFromFile();
-    if(index < 0 || index > scooterList.size()) {
+    loadFromFile();
+    if (index < 0 || index > list.size()) {
         throw out_of_range("CSVRepo::getScooterAtIndex(): Index out of range for index " + to_string(index));
     }
-    return scooterList[index];
+    return list[index];
 }
 
 vector<Scooter> CSVRepo::getAll() {
-
-    return loadFromFile();
+    return list;
 }
 
 void CSVRepo::saveToFile(const vector<Scooter> &scooterList) {
-    ofstream file(filename_, ios::app);
-    if(file.is_open()) {
-        for(const auto& scooter : scooterList) {
-            file << scooter.getId() << "," << scooter.getModel() << "," << timeToStr(scooter.getCommissioningDate()) << ","
-            << scooter.getKilometer() << "," << scooter.getLocation() << "," << scooter.getStatus() << "\n";
+    ofstream file(filename_, ios::out);
+    if (file.is_open()) {
+        for (const auto &scooter: scooterList) {
+            file << scooter.getId() << "," << scooter.getModel() << "," << timeToStr(scooter.getCommissioningDate())
+                 << ","
+                 << scooter.getKilometer() << "," << scooter.getLocation() << "," << scooter.getStatus() << "\n";
         }
         file.close();
     } else {
@@ -89,25 +85,32 @@ void CSVRepo::saveToFile(const vector<Scooter> &scooterList) {
     }
 }
 
-vector<Scooter> CSVRepo::loadFromFile() {
+void CSVRepo::loadFromFile() {
+    ifstream file(filename_);
 
-    std::ifstream file(filename_);
-    vector <Scooter> scooterList;
-
-    if(file.is_open()) {
+    if (file.is_open()) {
         string line;
-        while(getline(file, line)) {
-            stringstream iss(line);
+        while (getline(file, line)) {
+            istringstream iss(line);
             string id, model, commissioningDate, kilometer, location, status;
-            if (std::getline(iss, id, ',') && std::getline(iss, model, ',') &&
-            std::getline(iss, commissioningDate) && std::getline(iss, kilometer) &&
-            std::getline(iss, location) && std::getline(iss, status)) {
-                scooterList.emplace_back(id, model, strToTime(commissioningDate), std::stof(kilometer), location, Status(std::stoi(status)));
+            if (getline(iss, id, ',') && getline(iss, model, ',') &&
+                getline(iss, commissioningDate) && getline(iss, kilometer) &&
+                getline(iss, location) && getline(iss, status)) {
+                list.emplace_back(id, model, strToTime(commissioningDate), stof(kilometer), location,
+                                  Status(stoi(status)));
             }
         }
         file.close();
     } else {
         throw runtime_error("Could not open file!");
     }
-    return scooterList;
+}
+
+void CSVRepo::removeAtIndex(int index) {
+    loadFromFile();
+    if (index < 0 || index > list.size())
+        throw out_of_range("CSVRepo::removeAtIndex(): Index out of range for index " + to_string(index));
+
+    list.erase(list.begin() + index);
+    saveToFile(list);
 }
