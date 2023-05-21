@@ -9,17 +9,15 @@
 namespace ctrl {
     class ScooterController {
     private:
-        unique_ptr<CRUDRepo<Scooter>> repo;
+        unique_ptr<CRUDRepo> repo;
     public:
-        explicit ScooterController();
-
-        void setRepo(unique_ptr<CRUDRepo<Scooter>> _repoPtr);
+        explicit ScooterController(unique_ptr<CRUDRepo> _repoPtr);
 
         [[nodiscard]] vector<Scooter> searchByLocation(const string &location) const;
 
         [[nodiscard]] vector<Scooter> filterByCommissioningDate(const string &date) const;
 
-        [[nodiscard]] vector<Scooter> sortByCommisioningDate() const;
+        [[nodiscard]] vector<Scooter> sortByCommissioningDate() const;
 
         [[nodiscard]] vector<Scooter> getScootersByStatus(Status status) const;
 
@@ -28,6 +26,8 @@ namespace ctrl {
         void add(const string &id, const string &model, time_t commissioningDate, float kilometer,
                  const string &location,
                  Status status);
+
+        void update(const string &id, const Scooter &newScooter);
 
         void add(const Scooter &scooter);
 

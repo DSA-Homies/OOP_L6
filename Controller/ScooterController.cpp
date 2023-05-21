@@ -1,17 +1,15 @@
 #include <algorithm>
 #include "ScooterController.h"
 #include "../Utils/utils.h"
-#include "../Exception/ScooterException.h"
+#include "../Exception/InvalidScooterIdException.h"
 
 using namespace ctrl;
 
 using domain::Scooter;
 
-using Exception::ScooterException;
+using Exception::InvalidScooterIdException;
 
-ScooterController::ScooterController() = default;
-
-void ScooterController::setRepo(unique_ptr<CRUDRepo<Scooter>> _repoPtr) {
+ScooterController::ScooterController(unique_ptr<CRUDRepo> _repoPtr) {
     repo = std::move(_repoPtr);
 }
 
@@ -19,7 +17,7 @@ void ScooterController::setRepo(unique_ptr<CRUDRepo<Scooter>> _repoPtr) {
  * @brief This function searches for a scooter in the repository by its location and returns a vector of scooters that have
  * the same location as the location given as parameter to the function
  * @param location - the given location to find the scooters
- * @return result - a list of scooters that have the same location as the given parameter
+ * @return result - a scooterList of scooters that have the same location as the given parameter
  */
 vector<Scooter> ScooterController::searchByLocation(const string &location) const {
     vector<Scooter> allScooters = repo->getAll();
@@ -41,7 +39,7 @@ vector<Scooter> ScooterController::searchByLocation(const string &location) cons
 /**
  * @brief displays all the scooters whose commissioning date is lower or equal to the given date as parameter
  * @param _date the date that is used to filter the scooters in the repo
- * @return a list of scooters whose comissioning date is less or equal to the date given as parameter
+ * @return a scooterList of scooters whose comissioning date is less or equal to the date given as parameter
  */
 vector<Scooter> ScooterController::filterByCommissioningDate(const string &_date) const {
     time_t date = strToTime(_date);
@@ -63,11 +61,11 @@ vector<Scooter> ScooterController::filterByCommissioningDate(const string &_date
 /**
  * @brief displays all the scooters whose commissioning date is lower or equal to the given kilometer as parameter
  * @param kilometer the kilometers that are used to filter the scooters in the repo
- * @return a list of scooters whose kilometers are less or equal to the kilometers given as parameter
+ * @return a scooterList of scooters whose kilometers are less or equal to the kilometers given as parameter
  */
 vector<Scooter> ScooterController::filterByKilometer(float kilometer) const {
     if (kilometer < 0) {
-        throw ScooterException("Kilometers cannot be negative!");
+        throw InvalidScooterIdException("filterByKilometer: Kilometers cannot be negative!");
     }
     vector<Scooter> matches;
 
@@ -117,7 +115,7 @@ void ScooterController::deleteScooter(const string &id) {
     }
 
     if (!found) {
-        throw ScooterException("Scooter not found");
+        throw InvalidScooterIdException("deleteScooter: Scooter not found");
     }
 
 
@@ -125,9 +123,9 @@ void ScooterController::deleteScooter(const string &id) {
 
 /**
  * @brief sorts the scooters by their commissioning date (scooterA < scooterB)
- * @return a list of vectors that are sorted by their commissioning date
+ * @return a scooterList of vectors that are sorted by their commissioning date
  */
-vector<Scooter> ScooterController::sortByCommisioningDate() const {
+vector<Scooter> ScooterController::sortByCommissioningDate() const {
     vector<Scooter> list = repo->getAll();
 
     // Sort by commissioning date:
@@ -140,7 +138,7 @@ vector<Scooter> ScooterController::sortByCommisioningDate() const {
 
 /**
  * @brief Get all parked(available) scooters
- * @return a list of the scooters that are parked
+ * @return a scooterList of the scooters that are parked
  */
 vector<Scooter> ScooterController::getScootersByStatus(Status status) const {
     vector<Scooter> list = repo->getAll();
@@ -178,7 +176,7 @@ void ScooterController::setStatus(const string &id, Status status) {
     }
 
     if (!found) {
-        throw ScooterException("Scooter not found!");
+        throw InvalidScooterIdException("setStatus: Scooter not found!");
     }
 }
 
@@ -213,8 +211,22 @@ Scooter ScooterController::getScooterById(const string &id) {
         return *it;
     }
 
-    throw ScooterException("Scooter not found!");
+    throw InvalidScooterIdException("getScooterById: Scooter not found!");
 
 }
 
+/**
+ * @brief updates the scooter with the given id with the new scooter given as a parameter
+ * @param id
+ * @param newScooter
+ */
+void ScooterController::update(const string &id, const Scooter &newScooter) {
+    Scooter tempScooter(id);
 
+    int index = repo->getIndexOf(tempScooter);
+
+    if (index == -1)
+        throw InvalidScooterIdException("update: Scooter not found!");
+
+    repo->update(index, newScooter);
+}

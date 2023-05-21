@@ -25,27 +25,6 @@ namespace ui {
         explicit ScooterUI(const std::shared_ptr<ctrl::ScooterController> &_controller)
                 : ctrl(_controller), customerUI(_controller), managerUI(_controller) {}
 
-        void chooseRepo() {
-            vector<string> options = {"In Memory Repo", "CSV Repo", "Exit"};
-
-            int option = Widgets::menu("Choose Repository", options);
-
-            switch (option) {
-                case 1:
-//                    ctrl->setRepo(make_unique<InMemoryRepo<Scooter>>());
-                    break;
-                case 2:
-//                    ctrl->setRepo(make_unique<CSVRepo<Scooter>>(vector<Scooter> scooters));
-                    break;
-                case 3:
-                    exit(0);
-                default:
-                    chooseRepo();
-            }
-
-            mainMenu();
-        }
-
         void mainMenu() const {
             Widgets::printTitle("Bolt Scooters");
             vector<string> options = {"Manager", "Customer", "Exit"};

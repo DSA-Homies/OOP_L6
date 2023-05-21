@@ -12,14 +12,13 @@ using namespace domain;
 
 namespace repo {
 
-    class InMemoryRepo : public CRUDRepo<Scooter>{
+    class InMemoryRepo : public CRUDRepo{
     private:
-        Scooter myScooter{};
 
     public:
-        explicit InMemoryRepo(vector<Scooter> initList = {});
+        explicit InMemoryRepo(const vector<Scooter>& initList = {});
 
-        [[nodiscard]] Scooter getMyScooter() const;
+        [[nodiscard]] Scooter getMyScooter() const override;
 
         void setMyScooter(const Scooter &_myScooter) override;
 

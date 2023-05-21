@@ -1,9 +1,8 @@
 #include <iostream>
 #include "UI/ScooterUI.h"
-#include "../Repo/InMemoryRepo/InMemoryRepo.h"
 #include "Controller/ScooterController.h"
 
-#include "Test/TestAll.h"
+#include "../Test/TestAll.h"
 
 using namespace std;
 using namespace ui;
@@ -11,7 +10,7 @@ using namespace repo;
 using namespace ctrl;
 
 int main() {
-//    testAll();
+    testAll();
 
     vector<Scooter> initList{
             Scooter("aaa", "Bolt 4", strToTime("16-05-2023"), 10.0, "Str. Blaga", Status::PARKED),
@@ -26,10 +25,28 @@ int main() {
             Scooter("jjj", "Bolt 3", strToTime("28-11-2020"), 44.8, "Str. Eliade", Status::DECOMMISSIONED),
     };
 
-//    unique_ptr<CRUDRepo<Scooter>> repoPtr = make_unique<CRUDRepo<Scooter>>(initList);
-    unique_ptr<ScooterController> controllerPtr = make_unique<ScooterController>();
+    vector<string> options = {"In Memory Repo", "CSV Repo", "Exit"};
+    int option = Widgets::menu("Choose Repository", options);
+    unique_ptr<CRUDRepo> repoPtr;
 
+    do {
+        switch (option) {
+            case 1:
+                repoPtr = make_unique<InMemoryRepo>(initList);
+                break;
+            case 2:
+                repoPtr = make_unique<CSVRepo>(initList);
+                break;
+            case 3:
+                exit(0);
+            default:
+                break;
+
+        }
+    } while (option != 1 && option != 2);
+
+    unique_ptr<ScooterController> controllerPtr = make_unique<ScooterController>(std::move(repoPtr));
     ScooterUI ui(std::move(controllerPtr));
+    ui.mainMenu();
 
-    ui.chooseRepo();
 }

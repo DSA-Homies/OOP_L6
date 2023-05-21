@@ -11,13 +11,17 @@ using namespace std;
  * Custom exception class that inherits from the public class exception and returns the custom error message
  */
 namespace Exception {
-    class ScooterException : public exception{
+    class InvalidScooterIdException : public exception{
     private:
         string message;
     public:
-        explicit ScooterException(const string &message);
+        explicit InvalidScooterIdException(const string &message) {
+            this->message = message;
+        }
 
-        [[nodiscard]]const char *what() const noexcept override;
+        const char *what() const noexcept override {
+            return this->message.c_str();
+        }
     };
 }
 

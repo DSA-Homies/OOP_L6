@@ -114,7 +114,7 @@ namespace domain {
 
         [[nodiscard]] string toString() const;
 
-        //makes a list of strings of objects
+        //makes a scooterList of strings of objects
         [[nodiscard]] vector<string> toList() const;
     };
 

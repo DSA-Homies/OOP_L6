@@ -3,7 +3,7 @@
 
 #include "UI.h"
 #include "../Utils/utils.h"
-#include "../Exception/ScooterException.h"
+#include "../Exception/InvalidScooterIdException.h"
 
 #include <utility>
 
@@ -23,7 +23,7 @@ namespace ui {
         void mainMenu() const override {
             vector<string> options = {"Add Scooter", "Remove Scooter", "Set Status", "Search by Location",
                                       "Filter by commissioning date", "Filter by kilometer",
-                                      "Sort by commissioning date", "Back", "Exit"};
+                                      "Sort by commissioning date", "Update Scooter", "Back", "Exit"};
             int option = Widgets::menu("Manager Menu", options);
 
             switch (option) {
@@ -49,9 +49,12 @@ namespace ui {
                     sortByCommissioningDate();
                     break;
                 case 8:
+                    updateScooter();
+                    break;
+                case 9:
                     cout << "Back\n";
                     return;
-                case 9:
+                case 10:
                     cout << "App quitting\n";
                     std::exit(0);
                 default:
@@ -63,7 +66,7 @@ namespace ui {
 
     private:
         /**
-         * @brief Add a scooter to the list
+         * @brief Add a scooter to the scooterList
          */
         void addScooter() const {
             Widgets::printTitle("Add Scooter");
@@ -73,10 +76,12 @@ namespace ui {
             cout << "id -> ";
             cin >> id;
 
-            if (!controller->getScooterById(id).getId().empty()) {
+            try {
+                controller->getScooterById(id);
+
                 cout << "Error: id already exists. " << endl;
                 addScooter();
-            }
+            } catch (InvalidScooterIdException &e) {}
 
             if (id.size() != 3) {
                 cout << "Error : id must be 3 characters long. " << endl;
@@ -131,7 +136,78 @@ namespace ui {
         }
 
         /**
-         * @brief Remove a scooter from the list
+         * Updates an existing scooter in the repo, changing everything but the id, because the id is unique and cannot
+         * be changed
+         */
+        void updateScooter() const {
+            Widgets::printTitle("Update a Scooter");
+            string id, location, model, status, date;
+            float kilometers;
+
+            cout << "id -> ";
+            cin.ignore();
+            std::getline(cin, id);
+
+            Scooter oldScooter;
+            try {
+                oldScooter = controller->getScooterById(id);
+
+            } catch (InvalidScooterIdException &e) {
+                cout << "Error: " << e.what() << endl;;
+                updateScooter();
+            }
+
+            cout << "scooter " << id << ":\n" << oldScooter.toString() << endl;
+
+            cout << "new Model -> ";
+            getline(cin, model);
+
+            if (model.empty()) {
+                cout << "Error : model cannot be empty. " << endl;
+                updateScooter();
+            }
+
+            cout << "new Date -> ";
+            cin >> date;
+
+            if (!isDateFormatValid(date)) {
+                cout << "Error : date must be in the format dd-mm-yyyy. " << endl;
+                updateScooter();
+            }
+
+            cout << "new kilometers -> ";
+            cin >> kilometers;
+
+            if (kilometers < 0) {
+                cout << "Error : kilometers must be a positive number. " << endl;
+                updateScooter();
+            }
+
+            cout << "new Location -> ";
+            cin.ignore();
+            getline(cin, location);
+
+            if (location.empty()) {
+                cout << "Error : location cannot be empty. " << endl;
+                updateScooter();
+            }
+
+            cout << "new Status -> ";
+            cin >> status;
+
+            if (!Scooter::isStatusValid(status)) {
+                cout
+                        << "Error : status must be one of the following : PARKED, RESERVED, IN_USE, AWAITING, DECOMMISSIONED. "
+                        << endl;
+                updateScooter();
+            }
+
+            this->controller->update(id, Scooter(id, model, strToTime(date), kilometers, location,
+                                                 Scooter::strToStatus(status)));
+        }
+
+        /**
+         * @brief Remove a scooter from the scooterList
          */
         void removeScooter() const {
             Widgets::printTitle("Remove Scooter");
@@ -144,7 +220,7 @@ namespace ui {
             try {
                 controller->deleteScooter(id);
                 std::cout << "Scooter removed successfully. " << std::endl;
-            } catch (ScooterException &e) {
+            } catch (InvalidScooterIdException &e) {
                 cout << "Error : " << e.what() << std::endl;
             }
         }
@@ -166,7 +242,7 @@ namespace ui {
             try {
                 controller->setStatus(id, Scooter::strToStatus(status));
                 std::cout << "Scooter state updated successfully. " << std::endl;
-            } catch (ScooterException &e) {
+            } catch (InvalidScooterIdException &e) {
                 cout << "Error : " << e.what() << std::endl;
             }
         }
@@ -176,7 +252,7 @@ namespace ui {
          */
         void sortByCommissioningDate() const {
             Widgets::printTitle("Scooters sorted by commissioning date");
-            vector<Scooter> list = controller->sortByCommisioningDate();
+            vector<Scooter> list = controller->sortByCommissioningDate();
             Widgets::tableView(list);
         }
     };

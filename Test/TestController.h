@@ -11,7 +11,7 @@
 #include "../Repo/InMemoryRepo/InMemoryRepo.h"
 #include "../Controller/ScooterController.h"
 #include "../Utils/utils.h"
-#include "../Exception/ScooterException.h"
+#include "../Exception/InvalidScooterIdException.h"
 
 #include <cassert>
 
@@ -38,7 +38,7 @@ void testController() {
     try {
         controller.getScooterById("aaa");
         assert(false);
-    } catch (const ScooterException& e) {
+    } catch (const InvalidScooterIdException& e) {
         assert(true);
     }
 

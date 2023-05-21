@@ -50,7 +50,7 @@ namespace ui {
         }
 
         /**
-        * Print a menu as a numbered list of options
+        * Print a menu as a numbered scooterList of options
         * @returns the selected option as int
         * @param title
         * @param options
@@ -77,7 +77,7 @@ namespace ui {
         }
 
         /**
-    * Print a list of strings as a table
+    * Print a scooterList of strings as a table
     * @param columnHeaders
     * @param lines
     */

@@ -43,7 +43,8 @@ namespace ui {
                     filterByKilometers();
                     return;
                 case 7:
-                    cout << "App quitting\n";
+                    return;
+                case 8:
                     std::exit(0);
                 default:
                     mainMenu();

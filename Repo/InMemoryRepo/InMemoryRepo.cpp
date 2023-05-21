@@ -5,14 +5,15 @@
 
 using namespace repo;
 
-InMemoryRepo::InMemoryRepo(vector<Scooter> initList) : CRUDRepo<Scooter>(std::move(initList)) {
+InMemoryRepo::InMemoryRepo(const vector<Scooter> &initList) : CRUDRepo(initList) {
+    scooterList = initList;
 }
 
 /**
  * @return A vector containing all the scooters in the repo
  */
 vector<Scooter> InMemoryRepo::getAll() {
-    return list;
+    return scooterList;
 }
 
 /**
@@ -20,7 +21,7 @@ vector<Scooter> InMemoryRepo::getAll() {
  * @param scooter The scooter to be added
  */
 void InMemoryRepo::add(const Scooter &scooter) {
-    list.push_back(scooter);
+    scooterList.push_back(scooter);
 }
 
 /**
@@ -29,9 +30,9 @@ void InMemoryRepo::add(const Scooter &scooter) {
  * @return True if the scooter was removed, false otherwise
  */
 bool InMemoryRepo::remove(const Scooter &scooter) {
-    auto it = find(list.begin(), list.end(), scooter);
-    if (it != list.end()) {
-        list.erase(it);
+    auto it = find(scooterList.begin(), scooterList.end(), scooter);
+    if (it != scooterList.end()) {
+        scooterList.erase(it);
         return true;
     }
 
@@ -44,10 +45,10 @@ bool InMemoryRepo::remove(const Scooter &scooter) {
  * @throws out_of_range if index is invalid
  */
 void InMemoryRepo::removeAtIndex(int index) {
-    if (index < 0 || index > list.size())
+    if (index < 0 || index > scooterList.size())
         throw out_of_range("InMemoryRepo::removeAtIndex(): Index out of range for index " + to_string(index));
 
-    list.erase(list.begin() + index);
+    scooterList.erase(scooterList.begin() + index);
 }
 
 /**
@@ -57,10 +58,10 @@ void InMemoryRepo::removeAtIndex(int index) {
  * @throws out_of_range if index is invalid
  */
 void InMemoryRepo::update(int index, const Scooter &newScooter) {
-    if (index < 0 || index > list.size())
+    if (index < 0 || index > scooterList.size())
         throw out_of_range("InMemoryRepo::update(): Index out of range for index " + to_string(index));
 
-    list[index] = newScooter;
+    scooterList[index] = newScooter;
 }
 
 /**
@@ -69,10 +70,10 @@ void InMemoryRepo::update(int index, const Scooter &newScooter) {
  * @param status
  */
 void InMemoryRepo::updateStatus(int index, Status status) {
-    if (index < 0 || index > list.size())
+    if (index < 0 || index > scooterList.size())
         throw out_of_range("InMemoryRepo::updateStatus(): Index out of range for index " + to_string(index));
 
-    list[index].setStatus(status);
+    scooterList[index].setStatus(status);
 }
 
 /**
@@ -80,9 +81,9 @@ void InMemoryRepo::updateStatus(int index, Status status) {
  * @param scooter The scooter to be searched for
  */
 int InMemoryRepo::getIndexOf(const Scooter &scooter) {
-    auto it = std::find(list.begin(), list.end(), scooter);
-    if (it != list.end())
-        return int(distance(list.begin(), it));
+    auto it = std::find(scooterList.begin(), scooterList.end(), scooter);
+    if (it != scooterList.end())
+        return int(distance(scooterList.begin(), it));
 
     return -1;
 }
@@ -93,10 +94,10 @@ int InMemoryRepo::getIndexOf(const Scooter &scooter) {
  * @throws out_of_range if index is invalid
  */
 Scooter InMemoryRepo::getScooterAtIndex(int index) {
-    if (index < 0 || index > list.size())
+    if (index < 0 || index > scooterList.size())
         throw out_of_range("InMemoryRepo::getScooterAtIndex(): Index out of range for index " + to_string(index));
 
-    return list[index];
+    return scooterList[index];
 }
 
 /**
