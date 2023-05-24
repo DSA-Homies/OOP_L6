@@ -29,7 +29,6 @@ int main() {
     int option = Widgets::menu("Choose Repository", options);
     unique_ptr<CRUDRepo> repoPtr;
 
-    do {
         switch (option) {
             case 1:
                 repoPtr = make_unique<InMemoryRepo>(initList);
@@ -41,9 +40,7 @@ int main() {
                 exit(0);
             default:
                 break;
-
         }
-    } while (option != 1 && option != 2);
 
     unique_ptr<ScooterController> controllerPtr = make_unique<ScooterController>(std::move(repoPtr));
     ScooterUI ui(std::move(controllerPtr));
